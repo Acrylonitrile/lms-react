@@ -11,45 +11,51 @@ import {
   Form,
   TextZone,
   RowWrap
-} from "../Molecules/formstyles"
+} from "../../Molecules/formstyles"
 import * as yup from "yup"
-import CustomInput from "../Molecules/CustomInput"
-import CustomCheckbox from "../Molecules/CustomCheckbox"
-import RadioButtons from "../Molecules/RadioButtonField"
+import CustomInput from "../../Molecules/CustomInput"
+import CustomCheckbox from "../../Molecules/CustomCheckbox"
+import RadioButtons from "../../Molecules/RadioButtonField"
 
-interface IFormValues {
-  email: string
-  password: string
-  role: "admin" | "mentor" | "fresher"
-  rememberme: boolean
-}
+const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/
 
-const loginSchema = yup.object().shape({
-  email: yup.string().email("Please Enter a Valid Email").required("Required")
+const signUpSchema = yup.object().shape({
+  firstname: yup.string().required("Required"),
+  lastname: yup.string().required("Required"),
+  email: yup.string().email("Please Enter a Valid Email").required("Required"),
+  password: yup
+    .string()
+    .min(6)
+    .matches(passwordRules, { message: "Please create a stronger passsword" })
+    .required("Required")
 })
 
-function Login() {
+interface IFormValues {
+  firstname: string
+  lastname: string
+  email: string
+  password: string
+  rememberme: boolean
+  role: "mentor" | "fresher"
+}
+
+function SignUp() {
   const radioOptions = [
     {
       key: "option1",
-      value: "admin"
-    },
-    {
-      key: "option2",
       value: "mentor"
     },
     {
-      key: "option3",
+      key: "option2",
       value: "fresher"
     }
   ]
 
-  const handleSubmit = (
+  const handleSubmit = async (
     values: IFormValues,
     actions: FormikHelpers<IFormValues>
   ) => {
     console.log(values)
-
     actions.resetForm()
   }
 
@@ -57,9 +63,9 @@ function Login() {
     <>
       <MainWrapper>
         <FormWrapper>
-          <Header>Sign In</Header>
+          <Header>Get Started</Header>
           <SubHeader>
-            Don't have An Account? <Link to="../signup">Sign Up</Link>.
+            Already Have An Account? <Link to="../login">Sign in</Link>.
           </SubHeader>
           {/* <ButtonRow>
             <Button bgcolor="ffffff">Sign In with Google</Button>
@@ -68,22 +74,35 @@ function Login() {
 
           <Formik
             initialValues={{
+              firstname: "",
+              lastname: "",
               email: "",
               password: "",
-              role: "admin",
+              role: "mentor",
               rememberme: false
             }}
             onSubmit={handleSubmit}
-            validationSchema={loginSchema}
-            validateOnMount={true}
+            validationSchema={signUpSchema}
           >
             {(props) => (
               <Form onSubmit={props.handleSubmit}>
-                <TextZone onMouseEnter={() => console.log(props.isValid)}>
+                <TextZone>
+                  <CustomInput
+                    label="First Name"
+                    name="firstname"
+                    type="text"
+                    placeholder="First Name"
+                  />
+                  <CustomInput
+                    label="Last Name"
+                    name="lastname"
+                    type="text"
+                    placeholder="Last Name"
+                  />
                   <CustomInput
                     label="Email"
                     name="email"
-                    type="email"
+                    type="text"
                     placeholder="Enter Email Address"
                   />
                   <CustomInput
@@ -106,16 +125,20 @@ function Login() {
                     name="rememberme"
                     type="checkbox"
                   />
-                  <ForgotLink>
-                    <Link to="../forgotpassword">Forgot Password?</Link>
-                  </ForgotLink>
                 </RowWrap>
                 <SubmitButton
                   type="submit"
                   id="submit"
-                  disabled={!props.isValid}
+                  disabled={
+                    props.errors.email ||
+                    props.errors.password ||
+                    props.errors.firstname ||
+                    props.errors.lastname
+                      ? true
+                      : false
+                  }
                 >
-                  Sign In
+                  Sign Up
                 </SubmitButton>
               </Form>
             )}
@@ -126,7 +149,7 @@ function Login() {
   )
 }
 
-export default Login
+export default SignUp
 
 const MainWrapper = styled.div`
   display: flex;
@@ -134,8 +157,4 @@ const MainWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
-`
-
-const ForgotLink = styled.div`
-  margin-left: auto;
 `

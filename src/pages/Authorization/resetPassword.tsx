@@ -8,9 +8,9 @@ import {
   SubmitButton,
   Form,
   TextZone
-} from "../Molecules/formstyles"
+} from "../../Molecules/formstyles"
 import * as yup from "yup"
-import CustomInput from "../Molecules/CustomInput"
+import CustomInput from "../../Molecules/CustomInput"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons"
 import { useState } from "react"
