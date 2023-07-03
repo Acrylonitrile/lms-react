@@ -1,12 +1,25 @@
 import { styled } from "styled-components"
 import { MainWrapper, Title, ContentBox } from "./commonstyles"
 import HomeNavBar from "../../Molecules/HomeNavBar"
-import { FormikContext, useFormik, FormikProvider } from "formik"
+import { FormikContext, useFormik, FormikProvider, FormikHelpers } from "formik"
 import CustomInput from "../../Molecules/CustomInput"
 import AddChapters from "../../Molecules/AddChapters"
+import { SubmitButton } from "../../Molecules/formstyles"
+
+interface FormValues {
+  courseName: string
+  chapters: string[]
+}
 
 function AddCoursePage() {
-  const handleSubmit = () => {}
+  const handleSubmit = (
+    values: FormValues,
+    actions: FormikHelpers<FormValues>
+  ) => {
+    console.log("test")
+    console.log(values)
+    actions.resetForm()
+  }
 
   const formStates = useFormik({
     initialValues: {
@@ -15,7 +28,7 @@ function AddCoursePage() {
     },
     onSubmit: handleSubmit
   })
-  //  console.log(formStates.values)
+  // console.log(formStates.values)
   return (
     <MainWrapper>
       <ContentBox>
@@ -23,7 +36,10 @@ function AddCoursePage() {
         <HomeNavBar />
         <FormikProvider value={formStates}>
           <CustomInput name="courseName" label="Course Name" />
-          <AddChapters />
+          <AddChapters name="chapters" />
+          <SubmitButton onClick={() => formStates.handleSubmit()}>
+            Submit
+          </SubmitButton>
         </FormikProvider>
       </ContentBox>
     </MainWrapper>
