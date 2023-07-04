@@ -16,12 +16,13 @@ import * as yup from "yup"
 import CustomInput from "../../Molecules/CustomInput"
 import CustomCheckbox from "../../Molecules/CustomCheckbox"
 import RadioButtons from "../../Molecules/RadioButtonField"
+import axios from "axios"
+import { apiUrl } from "../../constants"
 
 interface IFormValues {
   email: string
   password: string
   role: "admin" | "mentor" | "fresher"
-  rememberme: boolean
 }
 
 const loginSchema = yup.object().shape({
@@ -44,13 +45,27 @@ function Login() {
     }
   ]
 
-  const handleSubmit = (
+  const handleSubmit = async (
     values: IFormValues,
     actions: FormikHelpers<IFormValues>
   ) => {
     console.log(values)
-
-    actions.resetForm()
+    const { email, password, role } = values
+    const postHeader = {
+      userDetails: {
+        email,
+        password
+      },
+      role
+    }
+    try {
+      const result = await axios.post(`${apiUrl}/auth/login`, postHeader)
+      console.log(result.data.authorization)
+      sessionStorage.setItem("accessToken", result.data.authorization as string)
+    } catch (error) {
+      console.log(error)
+    }
+    //   actions.resetForm()
   }
 
   return (
@@ -70,8 +85,7 @@ function Login() {
             initialValues={{
               email: "",
               password: "",
-              role: "admin",
-              rememberme: false
+              role: "admin"
             }}
             onSubmit={handleSubmit}
             validationSchema={loginSchema}
@@ -101,11 +115,6 @@ function Login() {
                   </RowWrap>
                 </TextZone>
                 <RowWrap>
-                  <CustomCheckbox
-                    label="Remember Me"
-                    name="rememberme"
-                    type="checkbox"
-                  />
                   <ForgotLink>
                     <Link to="../forgotpassword">Forgot Password?</Link>
                   </ForgotLink>

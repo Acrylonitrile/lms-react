@@ -16,6 +16,8 @@ import * as yup from "yup"
 import CustomInput from "../../Molecules/CustomInput"
 import CustomCheckbox from "../../Molecules/CustomCheckbox"
 import RadioButtons from "../../Molecules/RadioButtonField"
+import axios from "axios"
+import { apiUrl } from "../../constants"
 
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/
 
@@ -35,7 +37,6 @@ interface IFormValues {
   lastname: string
   email: string
   password: string
-  rememberme: boolean
   role: "mentor" | "fresher"
 }
 
@@ -56,9 +57,25 @@ function SignUp() {
     actions: FormikHelpers<IFormValues>
   ) => {
     console.log(values)
+    const { firstname, lastname, email, password, role } = values
+    const postHeader = {
+      userDetails: {
+        email,
+        password,
+        first_name: firstname,
+        last_name: lastname
+      },
+      role
+    }
+    try {
+      const result = await axios.post(`${apiUrl}/auth/signup`, postHeader)
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+    }
     actions.resetForm()
   }
-
+  console.log(`${apiUrl}/auth/signup`)
   return (
     <>
       <MainWrapper>
@@ -67,19 +84,13 @@ function SignUp() {
           <SubHeader>
             Already Have An Account? <Link to="../login">Sign in</Link>.
           </SubHeader>
-          {/* <ButtonRow>
-            <Button bgcolor="ffffff">Sign In with Google</Button>
-            <Button bgcolor="4040d5">Sign In with Facebook</Button>
-          </ButtonRow> */}
-
           <Formik
             initialValues={{
               firstname: "",
               lastname: "",
               email: "",
               password: "",
-              role: "mentor",
-              rememberme: false
+              role: "mentor"
             }}
             onSubmit={handleSubmit}
             validationSchema={signUpSchema}
@@ -119,13 +130,7 @@ function SignUp() {
                     />
                   </RowWrap>
                 </TextZone>
-                <RowWrap>
-                  <CustomCheckbox
-                    label="Remember Me"
-                    name="rememberme"
-                    type="checkbox"
-                  />
-                </RowWrap>
+
                 <SubmitButton
                   type="submit"
                   id="submit"

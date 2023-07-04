@@ -4,6 +4,7 @@ import CustomInput from "./CustomInput"
 import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import * as yup from "yup"
 
 interface FormValues {
   chapter: string
@@ -12,6 +13,10 @@ interface FormValues {
 interface Props {
   name: string
 }
+
+export const chapterSchema = yup.object().shape({
+  courseName: yup.string().required("Required")
+})
 
 function AddChapters({ name }: Props) {
   const [chapterList, setchapterList] = useState<string[]>([])
@@ -31,7 +36,8 @@ function AddChapters({ name }: Props) {
     initialValues: {
       chapter: ""
     },
-    onSubmit: handleSubmit
+    onSubmit: handleSubmit,
+    validationSchema: chapterSchema
   })
   // console.log(field.value)
   return (

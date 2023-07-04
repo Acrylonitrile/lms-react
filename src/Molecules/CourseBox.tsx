@@ -1,4 +1,5 @@
 import { styled } from "styled-components"
+import { useNavigate } from "react-router-dom"
 
 interface Props {
   courseName: string
@@ -6,9 +7,11 @@ interface Props {
 }
 
 function CourseBox({ courseName, teacherName }: Props) {
+  const navigate = useNavigate()
+
   return (
     <MainWrapper>
-      <CourseName>{courseName}</CourseName>
+      <CourseName onClick={() => navigate("/course")}>{courseName}</CourseName>
       <CourseDescription>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto
         quisquam perferendis fugiat dicta quis earum eligendi dolorum sunt
@@ -40,6 +43,10 @@ const CourseName = styled.div`
   position: absolute;
   top: 10px;
   left: 20px;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 `
 const CourseDescription = styled.div`
   overflow: hidden;

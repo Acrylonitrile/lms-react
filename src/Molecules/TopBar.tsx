@@ -6,8 +6,10 @@ import {
   faComment,
   faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons"
+import { useNavigate } from "react-router-dom"
 
 function TopBar() {
+  const navigate = useNavigate()
   return (
     <MainWrapper>
       <Leftitems>
@@ -20,7 +22,7 @@ function TopBar() {
         </Ul>
       </Leftitems>
       <RightItems>
-        <UserIcon>AU</UserIcon>
+        <UserIcon onClick={() => navigate("/auth/login")}>AU</UserIcon>
         <IconField>
           <FontAwesomeIcon icon={faComment} />
         </IconField>
@@ -76,6 +78,9 @@ export const Ul = styled.ul`
 export const Li = styled.li`
   padding: 0px 10px;
   font-size: 16px;
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const SearchField = styled.input`
@@ -99,6 +104,9 @@ const IconField = styled.div`
   flex-direction: column;
   justify-content: center;
   font-size: 20px;
+  &:hover {
+    cursor: pointer;
+  }
 `
 const UserIcon = styled(IconField)`
   background-color: gray;

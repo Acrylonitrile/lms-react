@@ -1,15 +1,20 @@
 import { styled } from "styled-components"
 import { MainWrapper, Title, ContentBox } from "./commonstyles"
 import HomeNavBar from "../../Molecules/HomeNavBar"
-import { FormikContext, useFormik, FormikProvider, FormikHelpers } from "formik"
+import { useFormik, FormikProvider, FormikHelpers } from "formik"
 import CustomInput from "../../Molecules/CustomInput"
 import AddChapters from "../../Molecules/AddChapters"
 import { SubmitButton } from "../../Molecules/formstyles"
+import * as yup from "yup"
 
 interface FormValues {
   courseName: string
   chapters: string[]
 }
+
+const courseNameSchema = yup.object().shape({
+  courseName: yup.string().required("Required")
+})
 
 function AddCoursePage() {
   const handleSubmit = (
@@ -26,7 +31,8 @@ function AddCoursePage() {
       courseName: "",
       chapters: [] as string[]
     },
-    onSubmit: handleSubmit
+    onSubmit: handleSubmit,
+    validationSchema: courseNameSchema
   })
   // console.log(formStates.values)
   return (

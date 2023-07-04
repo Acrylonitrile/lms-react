@@ -9,7 +9,7 @@ interface Props {
 
 function RadioButtons({ radioOptions, name, type }: Props) {
   const [field, meta] = useField(name)
-  console.log(field.value)
+  //  console.log(field.value)
   return (
     <>
       {radioOptions.map((option) => (

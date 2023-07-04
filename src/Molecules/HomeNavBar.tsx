@@ -1,11 +1,13 @@
 import { styled } from "styled-components"
 import { Ul, Li } from "./TopBar"
+import { useNavigate } from "react-router-dom"
 
 function HomeNavBar() {
+  const navigate = useNavigate()
   return (
     <MainWrapper>
       <Ul>
-        <Li>Home</Li>
+        <Li onClick={() => navigate("/home")}>Home</Li>
         <Li>Settings</Li>
         <Li>Particpants</Li>
         <Li>Reports</Li>
