@@ -4,14 +4,17 @@ import { useNavigate } from "react-router-dom"
 interface Props {
   courseName: string
   teacherName: string
+  id: number
 }
 
-function CourseBox({ courseName, teacherName }: Props) {
+function CourseBox({ courseName, teacherName, id }: Props) {
   const navigate = useNavigate()
 
   return (
     <MainWrapper>
-      <CourseName onClick={() => navigate("/course")}>{courseName}</CourseName>
+      <CourseName onClick={() => navigate(`/course/${id}`)} id={id.toString()}>
+        {courseName}
+      </CourseName>
       <CourseDescription>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto
         quisquam perferendis fugiat dicta quis earum eligendi dolorum sunt

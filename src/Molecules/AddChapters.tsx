@@ -1,7 +1,7 @@
 import { styled } from "styled-components"
 import { useField, useFormik, FormikProvider, FormikHelpers } from "formik"
 import CustomInput from "./CustomInput"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import * as yup from "yup"
@@ -14,13 +14,13 @@ interface Props {
   name: string
 }
 
-export const chapterSchema = yup.object().shape({
-  courseName: yup.string().required("Required")
+const chapterSchema = yup.object().shape({
+  chapter: yup.string().required("Required")
 })
 
 function AddChapters({ name }: Props) {
-  const [chapterList, setchapterList] = useState<string[]>([])
   const [field, meta, helpers] = useField(name)
+  const [chapterList, setchapterList] = useState<string[]>(field.value)
   const handleSubmit = (
     values: FormValues,
     actions: FormikHelpers<FormValues>
@@ -40,6 +40,7 @@ function AddChapters({ name }: Props) {
     validationSchema: chapterSchema
   })
   // console.log(field.value)
+
   return (
     <MainWrapper>
       <Heading>Add Chapters</Heading>

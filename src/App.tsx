@@ -17,9 +17,9 @@ function App() {
         <GlobalStyle />
         <Routes>
           <Route path="/" element={<DashBoardPage />}>
-            <Route path="home" element={<DashBoardHome />} />
+            <Route path="" element={<DashBoardHome />} />
             <Route path="/addcourse" element={<AddCoursePage />} />
-            <Route path="/course" element={<CoursePage />} />
+            <Route path="/course/:languageId" element={<CoursePage />} />
           </Route>
           <Route path="auth">
             <Route path="login" element={<Login />} />

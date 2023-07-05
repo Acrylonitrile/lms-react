@@ -7,7 +7,7 @@ function HomeNavBar() {
   return (
     <MainWrapper>
       <Ul>
-        <Li onClick={() => navigate("/home")}>Home</Li>
+        <Li onClick={() => navigate("/")}>Home</Li>
         <Li>Settings</Li>
         <Li>Particpants</Li>
         <Li>Reports</Li>

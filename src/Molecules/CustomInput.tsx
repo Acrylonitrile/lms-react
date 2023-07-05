@@ -7,7 +7,7 @@ interface Props extends React.HTMLProps<HTMLInputElement> {
 }
 
 function CustomInput({ label, ...props }: Props) {
-  let [field, meta] = useField(props)
+  let [field, meta] = useField(props.name)
   return (
     <MainWrapper>
       <Label>{label}</Label>
