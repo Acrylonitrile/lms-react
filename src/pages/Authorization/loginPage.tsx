@@ -18,6 +18,7 @@ import CustomCheckbox from "../../Molecules/CustomCheckbox"
 import RadioButtons from "../../Molecules/RadioButtonField"
 import axios from "axios"
 import { apiUrl } from "../../constants"
+import { login } from "../../Services/auth.service"
 
 interface IFormValues {
   email: string
@@ -51,21 +52,8 @@ function Login() {
   ) => {
     console.log(values)
     const { email, password, role } = values
-    const postHeader = {
-      userDetails: {
-        email,
-        password
-      },
-      role
-    }
-    try {
-      const result = await axios.post(`${apiUrl}/auth/login`, postHeader)
-      console.log(result.data.authorization)
-      sessionStorage.setItem("accessToken", result.data.authorization as string)
-    } catch (error) {
-      console.log(error)
-    }
-    //   actions.resetForm()
+    await login(email, password, role)
+    actions.resetForm()
   }
 
   return (

@@ -9,12 +9,15 @@ import { useParams } from "react-router-dom"
 import * as yup from "yup"
 import axios from "axios"
 import { apiUrl } from "../../constants"
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
+import { addChapters, getChapters } from "../../Services/database.service"
 
 interface FormValues {
   chapter: string
 }
 
-interface ChapterDetails {
+export interface IChapterDetails {
   id: number
   name: string
 }
@@ -24,19 +27,20 @@ const chapterSchema = yup.object().shape({
 })
 
 function CoursePage() {
-  const [detailsList, setDetailsList] = useState<ChapterDetails[]>([])
+  const [detailsList, setDetailsList] = useState<IChapterDetails[]>([])
   const { languageId } = useParams()
 
   const handleSubmit = async (
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) => {
-    const result = await axios.post(`${apiUrl}/chapters/add`, {
-      chapterList: [values.chapter],
-      languageId: parseInt(languageId as string)
-    })
+    const result = await addChapters(
+      [values.chapter],
+      parseInt(languageId as string)
+    )
     console.log(result)
-    await getChapters(languageId as string)
+    const newChapters = await getChapters(languageId as string)
+    setDetailsList(newChapters)
     actions.resetForm()
   }
 
@@ -48,23 +52,32 @@ function CoursePage() {
     validationSchema: chapterSchema
   })
 
-  const getChapters = async (languageId: string) => {
-    const result = await axios.get(`${apiUrl}/chapters/${languageId}`)
-    setDetailsList(result.data)
-  }
-
   useEffect(() => {
-    getChapters(languageId as string)
+    getChapters(languageId as string).then((result) => setDetailsList(result))
   }, [])
+
+  const alterSequence = (oldIndex: number, newIndex: number) => {
+    const tempList = [...detailsList]
+    tempList.splice(oldIndex, 1)
+    tempList.splice(newIndex, 0, detailsList[oldIndex])
+    setDetailsList(tempList)
+  }
 
   return (
     <MainWrapper>
       <ContentBox>
         <Title>Course Name</Title>
         <HomeNavBar />
-        {detailsList.map((item) => (
-          <ChapterDetails label={item.name} />
-        ))}
+        <DndProvider backend={HTML5Backend}>
+          {detailsList.map((item, index) => (
+            <ChapterDetails
+              label={item.name}
+              id={item.id}
+              index={index}
+              alterSequence={alterSequence}
+            />
+          ))}
+        </DndProvider>
         <FormikProvider value={formStates}>
           <CustomInput name="chapter" label="New Chapter" />
           <AddButton onClick={() => formStates.handleSubmit()}>

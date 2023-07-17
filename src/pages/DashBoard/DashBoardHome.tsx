@@ -4,8 +4,7 @@ import CourseBox from "../../Molecules/CourseBox"
 import { MainWrapper, ContentBox, Title } from "./commonstyles"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import axios from "axios"
-import { apiUrl } from "../../constants"
+import { getLanguages } from "../../Services/database.service"
 interface LanguageData {
   id: number
   name: string
@@ -14,14 +13,8 @@ interface LanguageData {
 function DashBoardHome() {
   const navigate = useNavigate()
   const [languageList, setLanguageList] = useState<LanguageData[]>([])
-
-  const getData = async () => {
-    const result = await axios.get(`${apiUrl}/language`)
-    //console.log(result)
-    setLanguageList(result.data)
-  }
   useEffect(() => {
-    getData()
+    getLanguages().then((result) => setLanguageList(result))
   }, [])
   return (
     <MainWrapper>
@@ -29,9 +22,6 @@ function DashBoardHome() {
         <Title>Home</Title>
         <HomeNavBar />
         <Title>Available Courses</Title>
-        {/* <CourseBox courseName="Course 1" teacherName="Teacher 1" />
-        <CourseBox courseName="Course 2" teacherName="Teacher 2" />
-        <CourseBox courseName="Course 3" teacherName="Teacher 3" /> */}
         {languageList.map((item) => (
           <CourseBox
             courseName={item.name}

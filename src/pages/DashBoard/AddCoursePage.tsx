@@ -9,6 +9,8 @@ import * as yup from "yup"
 import axios from "axios"
 import { apiUrl } from "../../constants"
 import { useNavigate } from "react-router-dom"
+import DropDownSelector from "../../Molecules/DropDownSelector"
+import { addChapters, addLanguage } from "../../Services/database.service"
 
 interface FormValues {
   courseName: string
@@ -26,17 +28,9 @@ function AddCoursePage() {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) => {
-    //console.log(values)
     try {
-      const languageResult = await axios.post(`${apiUrl}/language/add`, {
-        name: values.courseName
-      })
-      const languageId = languageResult.data.languageId as number
-      const chapterResult = await axios.post(`${apiUrl}/chapters/add`, {
-        chapterList: values.chapterList,
-        languageId
-      })
-      console.log(languageResult)
+      const languageId = await addLanguage(values.courseName)
+      const chapterResult = await addChapters(values.chapterList, languageId)
       console.log(chapterResult)
       actions.resetForm()
       navigate(`/course/${languageId}`)
@@ -64,6 +58,7 @@ function AddCoursePage() {
         <FormikProvider value={formStates}>
           <CustomInput name="courseName" label="Course Name" />
           <AddChapters name="chapterList" />
+          {/* <DropDownSelector /> */}
           <SubmitButton onClick={() => formStates.handleSubmit()}>
             Submit
           </SubmitButton>

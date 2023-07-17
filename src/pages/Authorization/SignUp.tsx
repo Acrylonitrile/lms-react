@@ -18,6 +18,7 @@ import CustomCheckbox from "../../Molecules/CustomCheckbox"
 import RadioButtons from "../../Molecules/RadioButtonField"
 import axios from "axios"
 import { apiUrl } from "../../constants"
+import { signUp } from "../../Services/auth.service"
 
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/
 
@@ -58,24 +59,9 @@ function SignUp() {
   ) => {
     console.log(values)
     const { firstname, lastname, email, password, role } = values
-    const postHeader = {
-      userDetails: {
-        email,
-        password,
-        first_name: firstname,
-        last_name: lastname
-      },
-      role
-    }
-    try {
-      const result = await axios.post(`${apiUrl}/auth/signup`, postHeader)
-      console.log(result)
-    } catch (error) {
-      console.log(error)
-    }
+    await signUp(firstname, lastname, email, password, role)
     actions.resetForm()
   }
-  console.log(`${apiUrl}/auth/signup`)
   return (
     <>
       <MainWrapper>
